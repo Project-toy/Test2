@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF 요약 및 번역 서비스</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 상단 헤더 */
+        header {
+            background-color: #4CAF50;
+            color: white;
+            width: 100%;
+            text-align: center;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-left: 1rem;
+        }
+
+        .menu-icon {
+            cursor: pointer;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .save-button {
+            background-color: #333;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: calc(100vh - 60px); /* 상단 헤더 높이 제외 */
+        }
+
+        /* 왼쪽 단어장 */
+        .left-panel {
+            background-color: #e0e0e0;
+            width: 25%;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .left-panel h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .vocab-item {
+            margin: 0.5rem 0;
+        }
+
+        .vocab-item a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        /* 중앙 PDF 업로드 및 텍스트 입력 */
+        .center-panel {
+            background-color: #ffffff;
+            width: 50%;
+            padding: 2rem;
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        .center-panel h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .center-panel input[type="file"],
+        .center-panel textarea {
+            width: 80%;
+            padding: 0.5rem;
+            margin-top: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .center-panel textarea {
+            height: 200px;
+        }
+
+        .center-panel button {
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* 오른쪽 번역 및 요약 결과 */
+        .right-panel {
+            background-color: #f9f9f9;
+            width: 25%;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .right-panel h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .output-section {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .translation-section,
+        .summary-section {
+            background-color: #fff;
+            padding: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            margin-top: 1rem;
+            height: 45%;
+            overflow-y: auto;
+        }
+
+        .summary-section {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="menu-icon">☰</div>
+        <h1>PDF 요약 및 번역 서비스</h1>
+        <button class="save-button" onclick="saveFile()">저장</button>
+    </header>
+
+    <div class="container">
+        <!-- 단어장 기능 -->
+        <section class="left-panel">
+            <h2>단어장</h2>
+            <div id="vocabList"></div>
+        </section>
+
+        <!-- PDF 업로드 및 텍스트 입력 -->
+        <section class="center-panel">
+            <h2>파일을 업로드하세요!</h2>
+            <input type="file" id="pdfUpload" accept="application/pdf">
+            <textarea id="textInput" placeholder="텍스트를 입력하세요..."></textarea>
+            <button onclick="processText()">결과보기</button>
+        </section>
+
+        <!-- 번역 및 요약 결과 -->
+        <section class="right-panel">
+            <h2>결과</h2>
+            <div class="output-section">
+                <div class="translation-section">
+                    <h3>번역 내용</h3>
+                    <div id="translationOutput">여기에 번역된 내용이 표시됩니다.</div>
+                </div>
+                <div class="summary-section">
+                    <h3>요약 내용</h3>
+                    <div id="summaryOutput">여기에 요약된 내용이 표시됩니다.</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript 코드 포함 -->
+    <script>
+        // 단어장 생성을 위한 단어 추출 및 링크 연결 함수
+        function updateVocabList(text) {
+            const vocabList = document.getElementById("vocabList");
+            vocabList.innerHTML = "";
+
+            // 임의 단어 목록 추출 예시 (단순화된 버전)
+            const words = text.match(/\b\w+\b/g).slice(0, 10);
+            words.forEach(word => {
+                const vocabItem = document.createElement("div");
+                vocabItem.classList.add("vocab-item");
+                vocabItem.innerHTML = `<a href="https://dict.naver.com/search.nhn?query=${word}" target="_blank">${word}</a>`;
+                vocabList.appendChild(vocabItem);
+            });
+        }
+
+        // 요약 및 번역 버튼 클릭 시 처리
+        function processText() {
+            const textInput = document.getElementById("textInput").value;
+            if (textInput) {
+                // 번역 결과
+                document.getElementById("translationOutput").innerText = `번역된 텍스트: ${textInput}`;
+                // 요약 결과
+                document.getElementById("summaryOutput").innerText = `요약된 텍스트: ${textInput.slice(0, 100)}...`; // 간단한 요약 예시
+                // 단어장 업데이트
+                updateVocabList(textInput);
+            }
+        }
+
+        // 저장 기능 (단순 예시)
+        function saveFile() {
+            const translationText = document.getElementById("translationOutput").innerText;
+            const summaryText = document.getElementById("summaryOutput").innerText;
+            const combinedText = `번역 내용:\n${translationText}\n\n요약 내용:\n${summaryText}`;
+
+            const blob = new Blob([combinedText], { type: "text/plain;charset=utf-8" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "translated_summary.txt";
+            link.click();
+        }
+    </script>
+</body>
+</html>
