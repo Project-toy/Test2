@@ -98,27 +98,36 @@
             margin-bottom: 1rem;
         }
 
-        .center-panel input[type="file"],
-        .center-panel textarea {
-            width: 80%;
+        .upload-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .center-panel input[type="file"] {
             padding: 0.5rem;
-            margin-top: 1rem;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
 
         .center-panel textarea {
-            height: 200px;
+            width: 80%;
+            height: 400px; /* 세로 길이를 2배로 설정 */
+            padding: 0.5rem;
+            margin-top: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none; /* 사용자가 크기 변경 불가 */
         }
 
         .center-panel button {
-            margin-top: 1rem;
             padding: 0.5rem 1.5rem;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-left: 1rem; /* 버튼을 오른쪽에 위치 */
         }
 
         /* 오른쪽 번역 및 요약 결과 */
@@ -176,9 +185,11 @@
         <!-- PDF 업로드 및 텍스트 입력 -->
         <section class="center-panel">
             <h2>파일을 업로드하세요!</h2>
-            <input type="file" id="pdfUpload" accept="application/pdf">
+            <div class="upload-section">
+                <input type="file" id="pdfUpload" accept="application/pdf">
+                <button onclick="processText()">결과보기</button>
+            </div>
             <textarea id="textInput" placeholder="텍스트를 입력하세요..."></textarea>
-            <button onclick="processText()">결과보기</button>
         </section>
 
         <!-- 번역 및 요약 결과 -->
@@ -197,15 +208,12 @@
         </section>
     </div>
 
-    <!-- JavaScript 코드 포함 -->
     <script>
-        // 단어장 생성을 위한 단어 추출 및 링크 연결 함수
         function updateVocabList(text) {
             const vocabList = document.getElementById("vocabList");
             vocabList.innerHTML = "";
 
-            // 임의 단어 목록 추출 예시 (단순화된 버전)
-            const words = text.match(/\b\w+\b/g).slice(0, 10);
+            const words = text.match(/\b\w+\b/g).slice(start, end);
             words.forEach(word => {
                 const vocabItem = document.createElement("div");
                 vocabItem.classList.add("vocab-item");
@@ -214,20 +222,15 @@
             });
         }
 
-        // 요약 및 번역 버튼 클릭 시 처리
         function processText() {
             const textInput = document.getElementById("textInput").value;
             if (textInput) {
-                // 번역 결과
                 document.getElementById("translationOutput").innerText = `번역된 텍스트: ${textInput}`;
-                // 요약 결과
-                document.getElementById("summaryOutput").innerText = `요약된 텍스트: ${textInput.slice(0, 100)}...`; // 간단한 요약 예시
-                // 단어장 업데이트
+                document.getElementById("summaryOutput").innerText = `요약된 텍스트: ${textInput.slice(0, 100)}...`;
                 updateVocabList(textInput);
             }
         }
 
-        // 저장 기능 (단순 예시)
         function saveFile() {
             const translationText = document.getElementById("translationOutput").innerText;
             const summaryText = document.getElementById("summaryOutput").innerText;
