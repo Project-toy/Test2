@@ -91,9 +91,9 @@ app.post('/signup', async (req, res) => {
     const { username, name, password } = req.body;
     const user = await fetchUser(username);
 
-    // 이미 존재하는 username일 경우 회원 가입 실패
+    // 이미 존재하는 username일 경우 회원 가입 실패 (화면이 별로임)
     if (user) {
-        res.status(400).send(`같은 ID가 있습니다 : ${username}
+        res.status(400).send(`같은 ID가 있습니다 : ${username} \n
                               <a href="/signup.html">Back</a>`);
         return;
     }
@@ -131,18 +131,19 @@ app.post('/login', async (req, res) => {
     //const user = db.get(username);
     const user = await fetchUser(username);
 
-    // 가입 안 된 username인 경우
+    // 가입 안 된 username인 경우 (화면이 별로임)
     if (!user) {
         res.status(400).send(`ID가 존재하지 않습니다. : ${username}
-                              <a href="/login.html">Log In</a>
-                              <a href="/signup.html">Sign Up</a>`);
+                              다시 로그인 : <a href="/login.html">Log In</a>
+                              ID가 없다면 ? : <a href="/signup.html">Sign Up</a>`);
         return;
     }
-    // 비밀번호가 틀렸을 경우
+    // 비밀번호가 틀렸을 경우 (화면이 별로임) 해결 함
     if (password !== user.password) {
-        res.status(400).send(`비밀번호가 다릅니다. 
-                              <a href="/login.html">Log In</a> 
-                              <a href="/signup.html">Sign Up</a>`);
+        /*res.status(400).send(`비밀번호가 다릅니다.
+                              다시 로그인 : <a href="/login.html">Log In</a> `);
+        */
+        res.send("<script>alert('비밀번호가 틀렸습니다.');location.href='/login.html';</script>");
         return;
     }
     // db에 저장된 user 객체를 문자열 형태로 변환하여 쿠키에 저장
