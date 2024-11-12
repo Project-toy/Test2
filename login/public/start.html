@@ -25,7 +25,7 @@
 
         /* 상단 헤더 */
         header {
-            background-color: #4CAF50;
+            background-color: #5C068C;
             color: white;
             width: 100%;
             text-align: center;
@@ -80,7 +80,7 @@
         }
 
         .vocab-item a {
-            color: #4CAF50;
+            color: #5C068C;
             text-decoration: none;
         }
 
@@ -122,7 +122,7 @@
 
         .center-panel button {
             padding: 0.5rem 1.5rem;
-            background-color: #4CAF50;
+            background-color: #5C068C;
             color: white;
             border: none;
             border-radius: 5px;
@@ -171,8 +171,9 @@
 <body>
     <header>
         <div class="menu-icon">☰</div>
-        <h1>PDF 요약 및 번역 서비스</h1>
+        <h1>한신대 PDF 요약 및 번역 서비스</h1>
         <button class="save-button" onclick="saveFile()">저장</button>
+        <!-- 현 문제 URL은 보라색이라 안보인다 버튼으로 바꿀 것 -->>
         <a href="/logout">LogOut</a>
         <a href="/withdraw">Remove_ID</a>
     </header>
@@ -192,6 +193,7 @@
                 <button onclick="processText()">결과보기</button>
             </div>
             <textarea id="textInput" placeholder="텍스트를 입력하세요..."></textarea>
+            <div><img src="hslogo.png"width="100" height="100"></div>
         </section>
 
         <!-- 번역 및 요약 결과 -->
