@@ -5,6 +5,8 @@
 //npm install cookie-parser
 //npm install express-session
 
+//접근시 : http://localhost:3000
+
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -91,7 +93,7 @@ app.post('/signup', async (req, res) => {
 
     // 이미 존재하는 username일 경우 회원 가입 실패
     if (user) {
-        res.status(400).send(`duplicate username: ${username}
+        res.status(400).send(`같은 ID가 있습니다 : ${username}
                               <a href="/signup.html">Back</a>`);
         return;
     }
@@ -104,7 +106,7 @@ app.post('/signup', async (req, res) => {
         password,
     };
     db.set(username, newUser);
-    //이 이게뭐지?
+    //
     await createUser({
         username,
         name,
@@ -131,14 +133,14 @@ app.post('/login', async (req, res) => {
 
     // 가입 안 된 username인 경우
     if (!user) {
-        res.status(400).send(`not registered username: ${username}
+        res.status(400).send(`ID가 존재하지 않습니다. : ${username}
                               <a href="/login.html">Log In</a>
                               <a href="/signup.html">Sign Up</a>`);
         return;
     }
     // 비밀번호가 틀렸을 경우
     if (password !== user.password) {
-        res.status(400).send(`incorrect password 
+        res.status(400).send(`비밀번호가 다릅니다. 
                               <a href="/login.html">Log In</a> 
                               <a href="/signup.html">Sign Up</a>`);
         return;
