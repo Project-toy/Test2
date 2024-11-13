@@ -100,7 +100,7 @@ app.post('/signup', async (req, res) => {
 
     // 아직 가입되지 않은 username인 경우 db에 저장
     // KEY = username, VALUE = { name, password }
-    const newUser = {
+    const newUser = { //스키마 설계 기본키는 username 즉 ID가 같는다.
         username,
         name,
         password,
