@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+    <style> /*css set up*/
+        body { /*fild set*/
+            font-family: Arial, sans-serif;
+            background-color: #f3e5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 1.5s ease; /* 색상의 변경이 천천히 진행되는 코드 */
+        }
+
+        .signup-container { /* signup set */
+            background-color: #fff;
+            padding: 4.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 450px;
+        }
+
+        .signup-container h2 { /* H2 set */
+            text-align: center;
+            margin-bottom: 2.0rem;
+            color: #333; /* 짙은 초록색 텍스트 */
+        }
+
+        .signup-container label { /* what is that? */
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .signup-container input[type="text"],
+        .signup-container input[type="password"] { /* input set */
+            width: 100%;
+            padding: 0.85rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .signup-container button { /* Sign Up button set */
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #dc1ff9;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .signup-container button:hover {
+            background-color: #dc1ff9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="signup-container">
+    <img src="hslogo.png"width="100" height="100">
+    <h2>Sign Up</h2>
+    <form action="/signup" method="POST">
+        <label for="username">ID </label>
+        <input type="text" placeholder="Your ID" id="username" name="username" required onclick="darkenBackground()">
+
+        <label for="name">Name </label>
+        <input type="text" placeholder="Your Name" id="name" name="name" required onclick="darkenBackground()">
+
+        <label for="password">Password</label>
+        <input type="password" placeholder="Your Password" id="password" name="password" required onclick="darkenBackground()">
+
+        <button type="submit">Sign UP</button>
+    </form>
+</div>
+    <script>
+        function darkenBackground() {
+            document.body.style.backgroundColor = "#efb1f8";
+        }
+    </script>
+</body>
+</html>
